@@ -7,7 +7,8 @@ class GeneratorController {
 
   public generateMetadata = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const generatedTokens = await this.generatorService.generateMetadata(
+      const generatedTokens = await this.generatorService.generateTokens(
+        req.body.quantity,
         req.body.metadata as CreateMetadataDto,
       );
 

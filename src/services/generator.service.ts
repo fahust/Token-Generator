@@ -40,6 +40,20 @@ class GeneratorService {
       attributes: await this.generateAttribute(metadata.attributes),
     };
   }
+
+  public async generateTokens(quantity: number, metadata: CreateMetadataDto) {
+    const tokens = [];
+    for (let i = 0; i < quantity; ++i) {
+      tokens.push(this.generateMetadata(metadata));
+    }
+    return Promise.all(tokens)
+      .then(results => {
+        return results;
+      })
+      .catch(e => {
+        throw new Error(e);
+      });
+  }
 }
 
 export default GeneratorService;
