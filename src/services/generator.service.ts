@@ -1,8 +1,8 @@
-import { hash } from 'bcrypt';
-import { CreateUserDto } from '@dtos/users.dto';
-import { HttpException } from '@exceptions/HttpException';
-import { User } from '@interfaces/users.interface';
-import userModel from '@models/users.model';
+import { hash } from "bcrypt";
+import { CreateMetadataDto } from "@/dtos/metadata.dto";
+import { HttpException } from "@exceptions/HttpException";
+import { User } from "@interfaces/users.interface";
+import userModel from "@models/users.model";
 
 class GeneratorService {
   public async randomValue(trait) {
@@ -20,22 +20,24 @@ class GeneratorService {
       if (result === null && percent > 100 - floatValue - acc) result = key;
       acc += floatValue;
     });
-    if (total != 100) throw new Error('Unexpected total percentage');
+    if (total != 100) throw new Error("Unexpected total percentage");
     return result;
   }
 
   public async generateAttribute(attributes) {
     const traits = Object.assign({}, attributes);
     for (let index = 0; index < Object.keys(attributes).length; index++) {
-      traits[Object.keys(attributes)[index]] = await this.randomValue(attributes[Object.keys(attributes)[index]]);
+      traits[Object.keys(attributes)[index]] = await this.randomValue(
+        attributes[Object.keys(attributes)[index]],
+      );
     }
     return traits;
   }
 
-  public async generateMetadata(metadata) {
+  public async generateMetadata(metadata: CreateMetadataDto) {
     return {
       ...metadata,
-      attributes: this.generateAttribute(metadata.attributes),
+      attributes: await this.generateAttribute(metadata.attributes),
     };
   }
 }
