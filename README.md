@@ -30,8 +30,9 @@ Install [Ganache](https://trufflesuite.com/ganache/) locally, and start local ne
 yarn ganache
 ```
 
-````bash
+```bash
 npm run ganache
+```
 
 ## Smart contract built With
 
