@@ -1,8 +1,9 @@
-import { hash } from "bcrypt";
 import { CreateMetadataDto } from "@/dtos/metadata.dto";
 import { HttpException } from "@exceptions/HttpException";
 import { User } from "@interfaces/users.interface";
 import userModel from "@models/users.model";
+import { writeFile } from "node:fs/promises";
+import path from "path";
 
 class GeneratorService {
   public async randomValue(trait) {
@@ -41,10 +42,28 @@ class GeneratorService {
     };
   }
 
-  public async generateTokens(quantity: number, metadata: CreateMetadataDto) {
+  public async generateTokens(
+    quantity: number,
+    metadata: CreateMetadataDto,
+  ): Promise<[CreateMetadataDto]> {
     const tokens = [];
     for (let i = 0; i < quantity; ++i) {
       tokens.push(this.generateMetadata(metadata));
+    }
+    return Promise.all(tokens)
+      .then((results: [CreateMetadataDto]) => {
+        return results;
+      })
+      .catch(e => {
+        throw new Error(e);
+      });
+  }
+
+  public async writeJson(tokens: [CreateMetadataDto]) {
+    const files = [];
+
+    for (let i = 0; i < tokens.length; ++i) {
+      files.push(writeFile(__dirname+"/../../files/tokens/" + i + ".json", JSON.stringify(tokens[i])));
     }
     return Promise.all(tokens)
       .then(results => {

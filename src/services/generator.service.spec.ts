@@ -34,4 +34,11 @@ describe("Test generator token", () => {
       );
     }
   });
+
+  it("generate tokens And write them", async () => {
+    const quantity = 100;
+    const tokens = await generatorService.generateTokens(quantity, metadatas);
+    
+    const files = await generatorService.writeJson(tokens);
+  });
 });
