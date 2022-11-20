@@ -81,7 +81,7 @@ class GeneratorService {
       });
   }
 
-  public async updateZipArchive(filepath, quantity) {
+  public async updateZipArchive(filepath: string, quantity: number) {
     try {
       const promises = [];
       const zip = new AdmZip();
