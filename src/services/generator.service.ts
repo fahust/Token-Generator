@@ -83,7 +83,6 @@ class GeneratorService {
 
   public async updateZipArchive(filepath: string, quantity: number) {
     try {
-      const promises = [];
       const zip = new AdmZip();
       for (let index = 0; index < quantity; index++) {
         const content = fs.readFileSync(
@@ -93,7 +92,6 @@ class GeneratorService {
       }
       zip.writeZip(filepath);
       console.log(`Updated ${filepath} successfully`);
-      return zip;
     } catch (e) {
       console.log(`Something went wrong. ${e}`);
     }
