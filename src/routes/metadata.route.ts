@@ -17,9 +17,14 @@ class GeneratorRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(
-      `${this.path}`,
+      `${this.path}/metadata/json`,
       validationMiddleware(CreateMetadataDto, "body"),
       this.generatorController.generateMetadata,
+    );
+    this.router.post(
+      `${this.path}/metadata/zip`,
+      validationMiddleware(CreateMetadataDto, "body"),
+      this.generatorController.downloadMetadatas,
     );
   }
 }
