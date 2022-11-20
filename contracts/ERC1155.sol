@@ -75,15 +75,9 @@ contract EASYERC1155 is Ownable, ERC1155 {
 
   ///@notice Function of burn token
   ///@param tokenId tokenId to burn
-//   function burn(uint256 tokenId) external {
-//     if(ownerOf(tokenId) != _msgSender())
-//       revert NotYourToken({
-//         tokenId: tokenId,
-//         sender: _msgSender()
-//       });
-//     maxSupply -= 1;
-//     burn(tokenId);
-//   }
+  function burn(uint256 tokenId, uint256 quantity) external {
+    _burn(_msgSender(), tokenId, quantity);
+  }
 
   ///@notice override of function before token transfer to pauser transfer
   function _beforeTokenTransfer(

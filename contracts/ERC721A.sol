@@ -103,15 +103,15 @@ contract EASYERC721A is Ownable, ERC721A {
 
   ///@notice Function of burn token
   ///@param tokenId tokenId to burn
-//   function burn(uint256 tokenId) external {
-//     if(ownerOf(tokenId) != _msgSender())
-//       revert NotYourToken({
-//         tokenId: tokenId,
-//         sender: _msgSender()
-//       });
-//     maxSupply -= 1;
-//     burn(tokenId);
-//   }
+  function burn(uint256 tokenId) external {
+    if(ownerOf(tokenId) != _msgSender())
+      revert NotYourToken({
+        tokenId: tokenId,
+        sender: _msgSender()
+      });
+    maxSupply -= 1;
+    _burn(tokenId);
+  }
 
   ///@notice override of function before token transfer to pauser transfer
   function _beforeTokenTransfers(
