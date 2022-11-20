@@ -38,7 +38,10 @@ describe("Test generator token", () => {
   it("generate tokens And write them", async () => {
     const quantity = 100;
     const tokens = await generatorService.generateTokens(quantity, metadatas);
-    
-    const files = await generatorService.writeJson(tokens);
+
+    await generatorService.writeJson(tokens);
+
+    const zip = await generatorService.updateZipArchive("./files/test.zip", quantity);
+    console.log(zip);
   });
 });
