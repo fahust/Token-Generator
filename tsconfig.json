@@ -37,6 +37,6 @@
       "@errors/*": ["errors/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.json", ".env", "tests/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json", ".env", "tests/*.ts", "test/generator.service.spec.ts"],
   "exclude": ["node_modules", "src/http", "src/logs"]
 }
