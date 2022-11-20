@@ -1,0 +1,19 @@
+version: 2.1
+
+jobs:
+  run-test:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - run:
+          name: install package
+          command: npm install
+      - run:
+          name: Run tests
+          command: npm run test
+
+workflows:
+  sample:
+    jobs:
+      - run-test
