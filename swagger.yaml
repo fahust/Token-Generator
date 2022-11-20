@@ -1,35 +1,23 @@
 tags:
-- name: users
-  description: users API
+- name: Token Generator
+  description: This project is a personnal utils to generate token with smart contract ERC721 / ERC1155 / ERC20.
 
 paths:
-# [GET] users
-  /users:
-    get:
-      tags:
-      - users
-      summary: Find All Users
-      responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
-
-# [POST] users
+# [POST] tokens
     post:
       tags:
-      - users
-      summary: Add User
+      - tokens
+      summary: Generate json tokens
       parameters:
       - name: body
         in: body
-        description: user Data
+        description: token Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/tokens'
       responses:
         201:
-          description: 'Created'
+          description: 'Generated'
         400:
           description: 'Bad Request'
         409:
@@ -37,64 +25,23 @@ paths:
         500:
           description: 'Server Error'
 
-# [GET] users/id
-  /users/{id}:
-    get:
+# [POST] tokens
+    post:
       tags:
-      - users
-      summary: Find User By Id
+      - tokens
+      summary: Generate zip tokens
       parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [PUT] users/id
-    put:
-      tags:
-      - users
-      summary: Update User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
       - name: body
         in: body
-        description: user Data
+        description: token Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/tokens'
       responses:
-        200:
-          description: 'OK'
+        201:
+          description: 'Generated'
         400:
           description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [DELETE] users/id
-    delete:
-      tags:
-      - users
-      summary: Delete User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-      responses:
-        200:
-          description: 'OK'
         409:
           description: 'Conflict'
         500:
@@ -102,18 +49,50 @@ paths:
 
 # definitions
 definitions:
-  users:
+  tokens:
     type: object
     required:
-        - email
-        - password
+        - name
+        - description
+        - image
+        - edition
+        - collection
+        - symbol
+        - properties
+        - category
+        - creators
+        - attributes
     properties:
-      email:
+      name:
         type: string
-        description: user Email
-      password:
+        description: name of token
+      description:
         type: string
-        description: user Password
+        description: description of token
+      image:
+        type: string
+        description: image uri of token
+      edition:
+        type: string
+        description: edition of token
+      collection:
+        type: Object
+        description: collection of token
+      symbol:
+        type: string
+        description: symbol of token
+      properties:
+        type: Object
+        description: symbol of token
+      category:
+        type: string
+        description: category of token
+      creators:
+        type: string
+        description: creators of token
+      attributes:
+        type: Object
+        description: attributes of token
 
 schemes:
  - https

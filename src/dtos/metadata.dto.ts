@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEmail, IsObject, IsString } from 'class-validator';
+import { IsObject, IsString } from "class-validator";
 
 export class CreateMetadataDto {
   @IsString()
