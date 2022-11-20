@@ -74,31 +74,31 @@ contract EASYERC721A is Ownable, ERC721A {
 
   ///@notice Function of mint token
   ///@param to address of receiver's item
-  function mint(address to) external payable {
+  function mint(address to, uint256 quantity) external payable {
     if(msg.value >= unitPrice)
       revert NotEnoughMoney({
         value: msg.value,
         unitPrice: unitPrice
       });
-    if (nextTokenIdToMint + 1 >= maxSupply)
+    if (nextTokenIdToMint + quantity >= maxSupply)
       revert MaxSupplyReached({
-        totalSupply: nextTokenIdToMint,
+        totalSupply: nextTokenIdToMint + quantity,
         maxSupply: maxSupply
       });
-    _safeMint(to, nextTokenIdToMint);
-    nextTokenIdToMint += 1;
+    _safeMint(to, quantity);
+    nextTokenIdToMint += quantity;
   }
 
   ///@notice Function of mint token
   ///@param to address of receiver's item
-  function mintOwner(address to) external onlyOwner {
-    if (nextTokenIdToMint + 1 >= maxSupply)
+  function mintOwner(address to, uint256 quantity) external onlyOwner {
+    if (nextTokenIdToMint + quantity >= maxSupply)
       revert MaxSupplyReached({
-        totalSupply: nextTokenIdToMint,
+        totalSupply: nextTokenIdToMint + quantity,
         maxSupply: maxSupply
       });
-    _safeMint(to, nextTokenIdToMint);
-    nextTokenIdToMint += 1;
+    _safeMint(to, quantity);
+    nextTokenIdToMint += quantity;
   }
 
   ///@notice Function of burn token
