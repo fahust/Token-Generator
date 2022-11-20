@@ -3,7 +3,8 @@ import { HttpException } from "@exceptions/HttpException";
 import { User } from "@interfaces/users.interface";
 import userModel from "@models/users.model";
 import { writeFile } from "node:fs/promises";
-import path from "path";
+import fs from "fs";
+import AdmZip from "adm-zip";
 
 class GeneratorService {
   public async randomValue(trait) {
@@ -63,15 +64,39 @@ class GeneratorService {
     const files = [];
 
     for (let i = 0; i < tokens.length; ++i) {
-      files.push(writeFile(__dirname+"/../../files/tokens/" + i + ".json", JSON.stringify(tokens[i])));
+      files.push(
+        writeFile(
+          __dirname + "/../../files/tokens/" + i + ".json",
+          JSON.stringify(tokens[i]),
+        ),
+      );
     }
-    return Promise.all(tokens)
+
+    return Promise.all(files)
       .then(results => {
         return results;
       })
       .catch(e => {
         throw new Error(e);
       });
+  }
+
+  public async updateZipArchive(filepath, quantity) {
+    try {
+      const promises = [];
+      const zip = new AdmZip();
+      for (let index = 0; index < quantity; index++) {
+        const content = fs.readFileSync(
+          __dirname + "/../../files/tokens/" + index + ".json",
+        );
+        zip.addFile(index + ".json", content);
+      }
+      zip.writeZip(filepath);
+      console.log(`Updated ${filepath} successfully`);
+      return zip;
+    } catch (e) {
+      console.log(`Something went wrong. ${e}`);
+    }
   }
 }
 
