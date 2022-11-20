@@ -1,7 +1,7 @@
 import { CreateMetadataDto } from "@/dtos/metadata.dto";
 import { HttpException } from "@exceptions/HttpException";
-import { User } from "@interfaces/users.interface";
-import userModel from "@models/users.model";
+import { Metadata } from "@interfaces/metadata.interface";
+import metadataModel from "@models/metadata.model";
 import { writeFile } from "node:fs/promises";
 import fs from "fs";
 import AdmZip from "adm-zip";
