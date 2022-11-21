@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install package
-          command: yarn
-      - run:
           name: Run tests
           command: yarn test
 
