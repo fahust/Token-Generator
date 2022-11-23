@@ -5,10 +5,9 @@
 pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "erc721a/contracts/ERC721A.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract EASYERC721A is Ownable, ERC721A {
+contract EASYERC721 is Ownable, ERC721 {
   using Strings for uint256;
 
   error MaxSupplyReached(uint256 totalSupply, uint256 maxSupply);
@@ -31,7 +30,7 @@ contract EASYERC721A is Ownable, ERC721A {
     string memory name,
     string memory symbol,
     string memory _initBaseURI
-  ) ERC721A(name, symbol) {
+  ) ERC721(name, symbol) {
     maxSupply = _maxSupply;
     unitPrice = _unitPrice;
     setBaseURI(_initBaseURI);
@@ -40,13 +39,13 @@ contract EASYERC721A is Ownable, ERC721A {
 
   ///@notice update unit price for on token
   ///@param _unitPrice price in wei for one token ** decimals
-  function setUnitPrice(uint256 _unitPrice) external {
+  function setUnitPrice(uint256 _unitPrice) external onlyOwner {
     unitPrice = _unitPrice;
   }
 
   ///@notice update max supply tokens
   ///@param _maxSupply max token mintable
-  function setMaxSupply(uint256 _maxSupply) external {
+  function setMaxSupply(uint256 _maxSupply) external onlyOwner {
     maxSupply = _maxSupply;
   }
 
@@ -74,31 +73,31 @@ contract EASYERC721A is Ownable, ERC721A {
 
   ///@notice Function of mint token
   ///@param to address of receiver's item
-  function mint(address to, uint256 quantity) external payable {
+  function mint(address to) external payable {
     if(msg.value >= unitPrice)
       revert NotEnoughMoney({
         value: msg.value,
         unitPrice: unitPrice
       });
-    if (nextTokenIdToMint + quantity >= maxSupply)
+    if (nextTokenIdToMint + 1 >= maxSupply)
       revert MaxSupplyReached({
-        totalSupply: nextTokenIdToMint + quantity,
+        totalSupply: nextTokenIdToMint,
         maxSupply: maxSupply
       });
-    _safeMint(to, quantity);
-    nextTokenIdToMint += quantity;
+    _safeMint(to, nextTokenIdToMint);
+    nextTokenIdToMint += 1;
   }
 
   ///@notice Function of mint token
   ///@param to address of receiver's item
-  function mintOwner(address to, uint256 quantity) external onlyOwner {
-    if (nextTokenIdToMint + quantity >= maxSupply)
+  function mintOwner(address to) external onlyOwner {
+    if (nextTokenIdToMint + 1 >= maxSupply)
       revert MaxSupplyReached({
-        totalSupply: nextTokenIdToMint + quantity,
+        totalSupply: nextTokenIdToMint,
         maxSupply: maxSupply
       });
-    _safeMint(to, quantity);
-    nextTokenIdToMint += quantity;
+    _safeMint(to, nextTokenIdToMint);
+    nextTokenIdToMint += 1;
   }
 
   ///@notice Function of burn token
@@ -113,13 +112,29 @@ contract EASYERC721A is Ownable, ERC721A {
     _burn(tokenId);
   }
 
+  ///@notice Withdraw funds of this contract to an address wallet
+  function withdraw() external onlyOwner {
+    payable(_msgSender()).transfer(address(this).balance);
+  }
+
+  ///@notice Pause mint of token between address before time pausedMintEndDate
+  ///@param time timestamp until which the contract will be paused for mint
+  function setPausedMintEndDate(uint256 time) external onlyOwner {
+    pausedMintEndDate = time;
+  }
+
+  ///@notice Pause transfer of token between address before time pausedTransferEndDate
+  ///@param time timestamp until which the contract will be paused for transfer
+  function setPausedTransferEndDate(uint256 time) external onlyOwner {
+    pausedTransferEndDate = time;
+  }
+
   ///@notice override of function before token transfer to pauser transfer
-  function _beforeTokenTransfers(
+  function _beforeTokenTransfer(
     address from,
     address to,
-    uint256 startTokenId,
-    uint256 quantity
-  ) internal virtual override(ERC721A) {
+    uint256 tokenId
+  ) internal virtual override(ERC721) {
     if (block.timestamp < pausedTransferEndDate && from != address(0))
       revert TransferIsPaused({
         timestamp: block.timestamp,
@@ -132,8 +147,7 @@ contract EASYERC721A is Ownable, ERC721A {
         pausedMintEndDate: pausedMintEndDate,
         from: from
       });
-    super._beforeTokenTransfers(from, to, startTokenId, quantity);
+    super._beforeTokenTransfer(from, to, tokenId);
   }
-  
   
 }
