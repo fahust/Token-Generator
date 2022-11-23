@@ -36,13 +36,13 @@ contract EASYERC1155 is Ownable, ERC1155 {
 
   ///@notice update unit price for on token
   ///@param _unitPrice price in wei for one token ** decimals
-  function setUnitPrice(uint256 _unitPrice) external {
+  function setUnitPrice(uint256 _unitPrice) external onlyOwner {
     unitPrice = _unitPrice;
   }
 
   ///@notice update max supply tokens
   ///@param _maxSupply max token mintable
-  function setMaxSupply(uint256 _maxSupply) external {
+  function setMaxSupply(uint256 _maxSupply) external onlyOwner {
     maxSupply = _maxSupply;
   }
 
@@ -77,6 +77,23 @@ contract EASYERC1155 is Ownable, ERC1155 {
   ///@param tokenId tokenId to burn
   function burn(uint256 tokenId, uint256 quantity) external {
     _burn(_msgSender(), tokenId, quantity);
+  }
+
+  ///@notice Withdraw funds of this contract to an address wallet
+  function withdraw() external onlyOwner {
+    payable(_msgSender()).transfer(address(this).balance);
+  }
+
+  ///@notice Pause mint of token between address before time pausedMintEndDate
+  ///@param time timestamp until which the contract will be paused for mint
+  function setPausedMintEndDate(uint256 time) external onlyOwner {
+    pausedMintEndDate = time;
+  }
+
+  ///@notice Pause transfer of token between address before time pausedTransferEndDate
+  ///@param time timestamp until which the contract will be paused for transfer
+  function setPausedTransferEndDate(uint256 time) external onlyOwner {
+    pausedTransferEndDate = time;
   }
 
   ///@notice override of function before token transfer to pauser transfer
